@@ -1,7 +1,6 @@
 package picpaydesafiobackend.application.payload.response;
 
 import lombok.*;
-
 import javax.validation.constraints.NotNull;
 
 
@@ -14,7 +13,6 @@ import java.time.LocalDate;
 @Builder
 @AllArgsConstructor
 public class MessageResponseDTO {
-
     @NotNull
     private boolean success;
     private String message;

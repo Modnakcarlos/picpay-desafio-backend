@@ -1,19 +1,13 @@
 package picpaydesafiobackend.common.controller;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import picpaydesafiobackend.application.exceptions.UserException;
 import picpaydesafiobackend.authentication.service.UserService;
 import picpaydesafiobackend.common.routes.Routes;
 import picpaydesafiobackend.common.service.PessoaService;
 import picpaydesafiobackend.common.utils.CustomBuilders;
-
-import javax.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @RestController

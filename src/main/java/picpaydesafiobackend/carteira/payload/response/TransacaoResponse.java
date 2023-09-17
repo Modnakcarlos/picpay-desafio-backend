@@ -1,9 +1,9 @@
 package picpaydesafiobackend.carteira.payload.response;
 
+import picpaydesafiobackend.authentication.payload.response.UserResponse;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import picpaydesafiobackend.authentication.payload.response.UserResponse;
 
 @Getter
 @Setter

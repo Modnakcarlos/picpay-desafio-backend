@@ -1,6 +1,14 @@
 package picpaydesafiobackend.authentication.controller;
 
-
+import picpaydesafiobackend.application.exceptions.UserException;
+import picpaydesafiobackend.application.payload.response.MessageResponseDTO;
+import picpaydesafiobackend.authentication.entity.User;
+import picpaydesafiobackend.authentication.payload.request.LoginRequest;
+import picpaydesafiobackend.authentication.service.AuthenticationService;
+import picpaydesafiobackend.authentication.service.UserService;
+import picpaydesafiobackend.common.routes.Routes;
+import picpaydesafiobackend.common.service.MessageResponseService;
+import picpaydesafiobackend.common.utils.MapResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,19 +16,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import picpaydesafiobackend.application.exceptions.UserException;
-import picpaydesafiobackend.authentication.entity.User;
-import picpaydesafiobackend.authentication.payload.request.LoginRequest;
-import picpaydesafiobackend.authentication.service.AuthenticationService;
-import picpaydesafiobackend.authentication.service.UserService;
-import picpaydesafiobackend.common.service.MessageResponseService;
-import picpaydesafiobackend.common.utils.MapResponses;
-import picpaydesafiobackend.common.utils.MessageResponseDTO;
 
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping()
+@RequestMapping(Routes.AUTENTICACAO)
 @RequiredArgsConstructor
 public class AuthenticationController {
     private final UserService userService;

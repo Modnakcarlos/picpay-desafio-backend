@@ -1,10 +1,10 @@
 package picpaydesafiobackend.common.utils;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import picpaydesafiobackend.authentication.entity.User;
 import picpaydesafiobackend.authentication.payload.response.UserResponse;
 import picpaydesafiobackend.carteira.payload.response.TransacaoResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;

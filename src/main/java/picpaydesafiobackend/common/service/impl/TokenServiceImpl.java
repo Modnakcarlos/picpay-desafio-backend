@@ -6,14 +6,9 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 
 import javax.crypto.SecretKey;
-import javax.resource.spi.work.SecurityContext;
 import java.nio.charset.StandardCharsets;
-import java.security.Key;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Map;
-
-import static org.springframework.cache.interceptor.SimpleKeyGenerator.generateKey;
 
 public class TokenServiceImpl {
 

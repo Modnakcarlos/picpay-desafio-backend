@@ -1,7 +1,7 @@
 package picpaydesafiobackend.common.service;
 
+import picpaydesafiobackend.application.payload.response.MessageResponseDTO;
 import org.springframework.stereotype.Service;
-import picpaydesafiobackend.common.utils.MessageResponseDTO;
 
 import java.time.LocalDate;
 

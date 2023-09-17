@@ -1,7 +1,5 @@
 package picpaydesafiobackend.authentication.service.impl;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import picpaydesafiobackend.application.exceptions.UserException;
 import picpaydesafiobackend.authentication.entity.User;
 import picpaydesafiobackend.authentication.payload.request.UserRequest;
@@ -12,6 +10,8 @@ import picpaydesafiobackend.common.entity.Pessoa;
 import picpaydesafiobackend.common.service.PessoaService;
 import picpaydesafiobackend.common.utils.CustomBuilders;
 import picpaydesafiobackend.common.utils.PasswordUtil;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;

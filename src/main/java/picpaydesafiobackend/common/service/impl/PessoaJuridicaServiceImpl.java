@@ -1,12 +1,12 @@
 package picpaydesafiobackend.common.service.impl;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import picpaydesafiobackend.authentication.entity.User;
 import picpaydesafiobackend.common.entity.PessoaJuridica;
 import picpaydesafiobackend.common.payload.request.PessoaRequest;
 import picpaydesafiobackend.common.service.PessoaJuridicaService;
 import picpaydesafiobackend.common.utils.CustomBuilders;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service

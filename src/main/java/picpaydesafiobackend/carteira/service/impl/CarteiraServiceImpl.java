@@ -1,7 +1,5 @@
 package picpaydesafiobackend.carteira.service.impl;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import picpaydesafiobackend.application.exceptions.WalletException;
 import picpaydesafiobackend.authentication.entity.User;
 import picpaydesafiobackend.carteira.entity.Carteira;
@@ -10,6 +8,8 @@ import picpaydesafiobackend.carteira.payload.request.WalletRequest;
 import picpaydesafiobackend.carteira.repository.CarteiraRepository;
 import picpaydesafiobackend.carteira.service.CarteiraService;
 import picpaydesafiobackend.common.utils.TipoPessoa;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor

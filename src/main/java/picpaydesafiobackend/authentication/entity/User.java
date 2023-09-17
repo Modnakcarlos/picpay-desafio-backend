@@ -1,11 +1,11 @@
 package picpaydesafiobackend.authentication.entity;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
-import lombok.*;
 import picpaydesafiobackend.application.utils.Constants;
 import picpaydesafiobackend.carteira.entity.Carteira;
 import picpaydesafiobackend.common.entity.Pessoa;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import lombok.*;
 
 import java.io.Serial;
 import java.io.Serializable;

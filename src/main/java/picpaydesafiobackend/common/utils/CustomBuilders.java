@@ -1,13 +1,14 @@
 package picpaydesafiobackend.common.utils;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import picpaydesafiobackend.application.payload.response.MessageResponseDTO;
 import picpaydesafiobackend.authentication.entity.User;
 import picpaydesafiobackend.authentication.payload.request.UserRequest;
 import picpaydesafiobackend.carteira.entity.Carteira;
 import picpaydesafiobackend.common.entity.PessoaFisica;
 import picpaydesafiobackend.common.entity.PessoaJuridica;
 import picpaydesafiobackend.common.payload.request.PessoaRequest;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 
@@ -37,6 +38,8 @@ public class CustomBuilders {
     public PessoaFisica buildPessoaFisica(PessoaRequest pessoaRequest, User user) {
         PessoaFisica pessoaFisica = new PessoaFisica();
         pessoaFisica.setCPF(pessoaRequest.getDocument());
+        pessoaFisica.setUser(user);
+        pessoaFisica.setFullName(pessoaRequest.getFullName());
         return pessoaFisica;
     }
 
@@ -50,6 +53,8 @@ public class CustomBuilders {
     public PessoaJuridica buildPessoaJuridica(PessoaRequest pessoaRequest, User user) {
         PessoaJuridica pessoaJuridica = new PessoaJuridica();
         pessoaJuridica.setCNPJ(pessoaRequest.getDocument());
+        pessoaJuridica.setUser(user);
+        pessoaJuridica.setFullName(pessoaRequest.getFullName());
         return pessoaJuridica;
     }
 }

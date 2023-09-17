@@ -1,10 +1,7 @@
 package picpaydesafiobackend.carteira.controller;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 import picpaydesafiobackend.application.exceptions.UserException;
+import picpaydesafiobackend.application.payload.response.MessageResponseDTO;
 import picpaydesafiobackend.authentication.entity.User;
 import picpaydesafiobackend.authentication.service.UserService;
 import picpaydesafiobackend.carteira.payload.request.TransacaoRequest;
@@ -13,7 +10,10 @@ import picpaydesafiobackend.carteira.service.CarteiraService;
 import picpaydesafiobackend.common.routes.Routes;
 import picpaydesafiobackend.common.service.MessageResponseService;
 import picpaydesafiobackend.common.utils.MapResponses;
-import picpaydesafiobackend.common.utils.MessageResponseDTO;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 

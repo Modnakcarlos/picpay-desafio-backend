@@ -1,7 +1,7 @@
 package picpaydesafiobackend.authentication.payload.request;
 
-import lombok.*;
 import picpaydesafiobackend.common.payload.request.PessoaRequest;
+import lombok.*;
 
 @Setter
 @Getter
