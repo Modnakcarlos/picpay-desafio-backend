@@ -1,4 +1,4 @@
-package com.example.picpaydesafiobackend.common;
+package picpaydesafiobackend.common;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
