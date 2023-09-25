@@ -1,36 +1,68 @@
 package picpaydesafiobackend.carteira.controller;
 
 import picpaydesafiobackend.application.exceptions.UserException;
+import picpaydesafiobackend.application.exceptions.WalletException;
 import picpaydesafiobackend.application.payload.response.MessageResponseDTO;
 import picpaydesafiobackend.authentication.entity.User;
 import picpaydesafiobackend.authentication.service.UserService;
+import picpaydesafiobackend.carteira.entity.Carteira;
 import picpaydesafiobackend.carteira.payload.request.TransacaoRequest;
 import picpaydesafiobackend.carteira.payload.request.WalletRequest;
 import picpaydesafiobackend.carteira.service.CarteiraService;
 import picpaydesafiobackend.common.routes.Routes;
 import picpaydesafiobackend.common.service.MessageResponseService;
+import picpaydesafiobackend.common.service.TokenService;
 import picpaydesafiobackend.common.utils.MapResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 import javax.validation.Valid;
 
 @RestController
 @RequestMapping(Routes.CARTEIRA)
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*")
 public class CarteiraController {
 
     private final CarteiraService carteiraService;
     private final UserService userService;
     private final MessageResponseService messageResponseService;
     private final MapResponses mapResponses;
+    private final TokenService tokenService;
 
-    @PutMapping("add-money-wallet")
-    public ResponseEntity<MessageResponseDTO> addMoneyInWallet(@Valid @RequestBody WalletRequest walletRequest) {
+    @GetMapping("saldo")
+    public ResponseEntity<MessageResponseDTO> getSaldoByUserEmail(HttpServletRequest request) {
         MessageResponseDTO messageResponseDTO;
         try {
+
+            tokenService.checkAccessToken(request);
+            User user = userService.findUserByEmail(tokenService.extractUserEmail(request));
+
+            Double saldo = carteiraService.getSaldoByUser(user);
+
+            messageResponseDTO = messageResponseService.prepareMessageBuild(true,
+                    "Busca realizada com sucesso!", saldo, "");
+
+            return ResponseEntity.ok().body(messageResponseDTO);
+        }
+        catch (Exception e) {
+            messageResponseDTO = messageResponseService.prepareMessageBuild(false,
+                    "Falha ao buscar dados.", null, e.getMessage());
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(messageResponseDTO);
+        }
+    }
+    @PutMapping("add-money-wallet")
+    public ResponseEntity<MessageResponseDTO> addMoneyInWallet(@Valid @RequestBody WalletRequest walletRequest, HttpServletRequest request) {
+        MessageResponseDTO messageResponseDTO;
+        try {
+
+            tokenService.checkAccessToken(request);
+
             User user = userService.findUserById(walletRequest.getUserId());
             validateUser(user);
 
@@ -50,21 +82,28 @@ public class CarteiraController {
     }
 
     @PutMapping("transferir-dinheiro")
-    public ResponseEntity<MessageResponseDTO> sendMoney(@Valid @RequestBody TransacaoRequest transacaoRequest) {
+    public ResponseEntity<MessageResponseDTO> sendMoney(@Valid @RequestBody TransacaoRequest transacaoRequest, HttpServletRequest request) {
         MessageResponseDTO messageResponseDTO;
         try {
-            validateTransacao(transacaoRequest);
 
-            User pagador = userService.findUserById(transacaoRequest.getPagador());
-            validateUser(pagador);
+            tokenService.checkAccessToken(request);
 
-            User recebedor = userService.findUserById(transacaoRequest.getRecebedor());
-            validateUser(recebedor);
+            User pagador = userService.findUserByEmail(tokenService.extractUserEmail(request));
+
+            validateTransacao(transacaoRequest, pagador);
+
+            User recebedor = userService.findUserByEmail(transacaoRequest.getEmailRecebedor());
 
             carteiraService.sendMoney(transacaoRequest, pagador, recebedor);
 
             messageResponseDTO = messageResponseService.prepareMessageBuild(true,
                     "Transferência realizada com sucesso!", mapResponses.mapToTransacaoResponse(pagador, recebedor, transacaoRequest.getValor()), "");
+
+            return ResponseEntity.status(HttpStatus.OK).body(messageResponseDTO);
+        }
+        catch (UserException | WalletException e) {
+            messageResponseDTO = messageResponseService.prepareMessageBuild(false,
+                    e.getMessage(), null, e.getMessage());
 
             return ResponseEntity.status(HttpStatus.OK).body(messageResponseDTO);
         }
@@ -76,10 +115,26 @@ public class CarteiraController {
         }
     }
 
-    private void validateTransacao(TransacaoRequest transacaoRequest) throws UserException {
-        if (transacaoRequest.getPagador().equals(transacaoRequest.getRecebedor())) {
+    private void validateTransacao(TransacaoRequest transacaoRequest, User pagador) throws UserException, WalletException {
+
+        if (pagador == null ||
+                transacaoRequest.getEmailRecebedor().isEmpty() ||
+                transacaoRequest.getValor() == null
+        ) {
+            throw new UserException("Todos os campos precisam ser preenchidos.");
+        }
+
+        if (pagador.getEmail().equals(transacaoRequest.getEmailRecebedor())) {
             throw new UserException("Você não pode mandar dinheiro para si mesmo.");
         }
+
+        if (transacaoRequest.getValor() < 0.01) {
+            throw new WalletException("Você precisa inserir um valor válido para transferência, que seja superior a 1 centavo");
+        }
+
+        User recebedor = userService.findUserByEmail(transacaoRequest.getEmailRecebedor());
+        validateUser(recebedor);
+        validateUser(pagador);
     }
 
     private void validateUser(User user) throws UserException {

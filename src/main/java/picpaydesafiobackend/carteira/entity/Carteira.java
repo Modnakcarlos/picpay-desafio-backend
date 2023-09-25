@@ -1,5 +1,7 @@
 package picpaydesafiobackend.carteira.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import picpaydesafiobackend.application.utils.Constants;
 import picpaydesafiobackend.authentication.entity.User;
 import jakarta.persistence.*;

@@ -10,7 +10,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class TransacaoRequest {
-    private String pagador;
-    private String recebedor;
+    //private String pagador;
+    private String emailRecebedor;
     private Double valor;
 }

@@ -8,6 +8,10 @@ import picpaydesafiobackend.carteira.payload.request.TransacaoRequest;
 import picpaydesafiobackend.carteira.payload.request.WalletRequest;
 
 public interface CarteiraService {
-    Carteira addMoney(WalletRequest walletRequest, User user) throws UserException;
+
+    Carteira getCarteiraByUser(User user) throws WalletException;
+    Double getSaldoByUser(User user) throws WalletException;
+    Carteira addMoney(WalletRequest walletRequest, User user) throws UserException, WalletException;
     void sendMoney(TransacaoRequest transacaoRequest, User pagador, User recebedor) throws WalletException;
+    void salveCarteira(Carteira carteira);
 }

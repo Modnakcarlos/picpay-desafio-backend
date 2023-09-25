@@ -1,9 +1,13 @@
 package picpaydesafiobackend.authentication.controller;
 
+import org.springframework.http.HttpHeaders;
+import org.springframework.web.bind.annotation.*;
+import picpaydesafiobackend.application.config.SecurityContext;
 import picpaydesafiobackend.application.exceptions.UserException;
 import picpaydesafiobackend.application.payload.response.MessageResponseDTO;
 import picpaydesafiobackend.authentication.entity.User;
 import picpaydesafiobackend.authentication.payload.request.LoginRequest;
+import picpaydesafiobackend.authentication.payload.response.AuthenticatedUserResponse;
 import picpaydesafiobackend.authentication.service.AuthenticationService;
 import picpaydesafiobackend.authentication.service.UserService;
 import picpaydesafiobackend.common.routes.Routes;
@@ -12,21 +16,17 @@ import picpaydesafiobackend.common.utils.MapResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
 @RestController
 @RequestMapping(Routes.AUTENTICACAO)
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*")
 public class AuthenticationController {
     private final UserService userService;
     private final AuthenticationService authenticationService;
     private final MessageResponseService messageResponseService;
-    private final MapResponses mapResponses;
 
     @PostMapping("login")
     public ResponseEntity<MessageResponseDTO> login(@Valid @RequestBody LoginRequest loginRequest) {
@@ -35,12 +35,14 @@ public class AuthenticationController {
             User user = userService.findUserByEmail(loginRequest.getEmail());
             validateUser(user);
 
-            User userAuthored = authenticationService.autenticar(loginRequest, user);
+            AuthenticatedUserResponse userAuthored = authenticationService.autenticar(loginRequest, user);
+
+            HttpHeaders httpHeaders = createAuthenticationHeader(userAuthored.getToken());
 
             messageResponseDTO = messageResponseService.prepareMessageBuild(true,
-                    "Login efetuado com sucesso!", mapResponses.mapToUserResponse(userAuthored), "");
+                    "Login efetuado com sucesso!", userAuthored, "");
 
-            return ResponseEntity.status(HttpStatus.OK).body(messageResponseDTO);
+            return ResponseEntity.ok().headers(httpHeaders).body(messageResponseDTO);
         }
         catch (Exception e) {
             messageResponseDTO = messageResponseService.prepareMessageBuild(false,
@@ -49,6 +51,12 @@ public class AuthenticationController {
             return ResponseEntity.status(HttpStatus.OK).body(messageResponseDTO);
         }
 
+    }
+
+    private HttpHeaders createAuthenticationHeader(String token) {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add(SecurityContext.HEADER, token);
+        return httpHeaders;
     }
 
     private void validateUser(User user) throws UserException {

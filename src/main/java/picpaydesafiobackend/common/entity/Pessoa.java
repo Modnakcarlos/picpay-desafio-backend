@@ -8,13 +8,15 @@ import lombok.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Getter
 @Setter
 @RequiredArgsConstructor
-@Inheritance(strategy = InheritanceType.JOINED)
+@AllArgsConstructor
 @Table(schema = Constants.SCHEMA_COMMON, name = "pessoa")
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Pessoa implements Serializable {
 
     @Serial
@@ -27,13 +29,17 @@ public abstract class Pessoa implements Serializable {
     @Column(name = "name")
     private String fullName;
 
-    @OneToOne
-    @JoinColumn(name = "usuario", foreignKey = @ForeignKey(name = "fk_user_id"), nullable = false)
-    @NotNull(message = "Usuário é dado obrigatório.")
-    private User user;
 
-    public Pessoa(String fullName, User user) {
-        this.fullName = fullName;
-        this.user = user;
-    }
+    @NotNull(message = "Usuário é dado obrigatório.")
+    @Column(name = "usuario")
+    private String usuarioId;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "pessoa", orphanRemoval = true)
+    private List<SocialLink> socialLinks;
+
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "pessoa", orphanRemoval = true)
+    private Endereco endereco;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "pessoa", orphanRemoval = true)
+    private List<Contato> contacts;
 }

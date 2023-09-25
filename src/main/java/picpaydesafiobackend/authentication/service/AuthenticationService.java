@@ -3,7 +3,8 @@ package picpaydesafiobackend.authentication.service;
 import picpaydesafiobackend.application.exceptions.UserException;
 import picpaydesafiobackend.authentication.entity.User;
 import picpaydesafiobackend.authentication.payload.request.LoginRequest;
+import picpaydesafiobackend.authentication.payload.response.AuthenticatedUserResponse;
 
 public interface AuthenticationService {
-    User autenticar(LoginRequest loginRequest, User user) throws UserException;
+    AuthenticatedUserResponse autenticar(LoginRequest loginRequest, User user) throws UserException;
 }

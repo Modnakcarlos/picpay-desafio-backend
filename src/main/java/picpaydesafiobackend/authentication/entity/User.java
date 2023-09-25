@@ -1,11 +1,12 @@
 package picpaydesafiobackend.authentication.entity;
 
-import picpaydesafiobackend.application.utils.Constants;
-import picpaydesafiobackend.carteira.entity.Carteira;
-import picpaydesafiobackend.common.entity.Pessoa;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
+import picpaydesafiobackend.application.utils.Constants;
+import picpaydesafiobackend.carteira.entity.Carteira;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -40,10 +41,7 @@ public class User implements Serializable {
     @Column(name = "tipo_pessoa")
     private String tipoPessoa;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
-    private Pessoa pessoa;
-
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "user", optional = true)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
     private Carteira carteira;
 
     //@Temporal(TemporalType.TIMESTAMP)
