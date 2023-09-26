@@ -7,5 +7,6 @@ public class Routes {
     public static final String PESSOA = BASE + "pessoa";
     public static final String CARTEIRA = BASE + "carteira";
     public static final String CARTAO = BASE + "cartao";
+    public static final String TRANSACAO = BASE + "transacao";
 
 }

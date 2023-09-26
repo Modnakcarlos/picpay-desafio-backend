@@ -11,8 +11,6 @@ import picpaydesafiobackend.carteira.repository.CarteiraRepository;
 import picpaydesafiobackend.carteira.service.CarteiraService;
 import picpaydesafiobackend.common.utils.TipoPessoa;
 
-import java.text.DecimalFormat;
-
 @Service
 @RequiredArgsConstructor
 public class CarteiraServiceImpl implements CarteiraService {
@@ -27,11 +25,11 @@ public class CarteiraServiceImpl implements CarteiraService {
     }
 
     @Override
-    public Double getSaldoByUser(User user) throws WalletException {
+    public String getSaldoByUser(User user) throws WalletException {
         Carteira carteira = carteiraRepository.findCarteiraByUser(user)
                 .orElseThrow(() -> new WalletException("Falha ao buscar dados de carteira."));
 
-        return carteira.getSaldo();
+        return String.format("%.2f", carteira.getSaldo());
     }
 
     @Override

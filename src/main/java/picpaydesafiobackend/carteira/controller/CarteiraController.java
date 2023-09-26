@@ -1,24 +1,25 @@
 package picpaydesafiobackend.carteira.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import picpaydesafiobackend.application.exceptions.UserException;
 import picpaydesafiobackend.application.exceptions.WalletException;
 import picpaydesafiobackend.application.payload.response.MessageResponseDTO;
 import picpaydesafiobackend.authentication.entity.User;
 import picpaydesafiobackend.authentication.service.UserService;
-import picpaydesafiobackend.carteira.entity.Carteira;
+import picpaydesafiobackend.carteira.entity.Transacao;
 import picpaydesafiobackend.carteira.payload.request.TransacaoRequest;
 import picpaydesafiobackend.carteira.payload.request.WalletRequest;
 import picpaydesafiobackend.carteira.service.CarteiraService;
+import picpaydesafiobackend.carteira.service.TransacaoService;
 import picpaydesafiobackend.common.routes.Routes;
 import picpaydesafiobackend.common.service.MessageResponseService;
 import picpaydesafiobackend.common.service.TokenService;
+import picpaydesafiobackend.common.utils.CustomBuilders;
 import picpaydesafiobackend.common.utils.MapResponses;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import jakarta.servlet.http.HttpServletRequest;
 
 import javax.validation.Valid;
 
@@ -33,6 +34,8 @@ public class CarteiraController {
     private final MessageResponseService messageResponseService;
     private final MapResponses mapResponses;
     private final TokenService tokenService;
+    private final CustomBuilders customBuilders;
+    private final TransacaoService transacaoService;
 
     @GetMapping("saldo")
     public ResponseEntity<MessageResponseDTO> getSaldoByUserEmail(HttpServletRequest request) {
@@ -42,7 +45,7 @@ public class CarteiraController {
             tokenService.checkAccessToken(request);
             User user = userService.findUserByEmail(tokenService.extractUserEmail(request));
 
-            Double saldo = carteiraService.getSaldoByUser(user);
+            String saldo = carteiraService.getSaldoByUser(user);
 
             messageResponseDTO = messageResponseService.prepareMessageBuild(true,
                     "Busca realizada com sucesso!", saldo, "");
@@ -89,15 +92,17 @@ public class CarteiraController {
             tokenService.checkAccessToken(request);
 
             User pagador = userService.findUserByEmail(tokenService.extractUserEmail(request));
-
-            validateTransacao(transacaoRequest, pagador);
-
             User recebedor = userService.findUserByEmail(transacaoRequest.getEmailRecebedor());
+            validateTransacao(transacaoRequest, pagador);
 
             carteiraService.sendMoney(transacaoRequest, pagador, recebedor);
 
+            Transacao transacao = customBuilders.buildTransacao(pagador.getId(), recebedor.getId(), transacaoRequest.getValor());
+
+            transacaoService.addTransacaoToRecentIfIsValid(transacao);
+
             messageResponseDTO = messageResponseService.prepareMessageBuild(true,
-                    "Transferência realizada com sucesso!", mapResponses.mapToTransacaoResponse(pagador, recebedor, transacaoRequest.getValor()), "");
+                    "Transferência realizada com sucesso!", mapResponses.mapToTransacaoResponse(transacao), "");
 
             return ResponseEntity.status(HttpStatus.OK).body(messageResponseDTO);
         }

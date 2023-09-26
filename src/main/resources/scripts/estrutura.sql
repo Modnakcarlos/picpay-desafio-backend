@@ -63,7 +63,7 @@ create table if not exists public.usuario (
 create table if not exists public.carteira (
     id serial not null constraint carteira_pkey primary key,
     usuario_id varchar(255) not null,
-    saldo integer default 0
+    saldo double precision default 0
 );
 
 -- CARTAO
@@ -75,4 +75,12 @@ create table if not exists public.cartao (
   validade timestamp not null,
   codigo_seguranca char(3) not null,
   carteira_id integer not null
+);
+
+--TRANSACAO
+create table if not exists public.transacao (
+  id serial not null constraint pkey_transacao primary key,
+  pagador varchar(100) not null,
+  recebedor varchar(100) not null,
+  valor double precision not null
 );

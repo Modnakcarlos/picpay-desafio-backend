@@ -1,15 +1,22 @@
 package picpaydesafiobackend.common.utils;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 import picpaydesafiobackend.application.payload.response.MessageResponseDTO;
 import picpaydesafiobackend.authentication.entity.User;
 import picpaydesafiobackend.authentication.payload.request.UserRequest;
 import picpaydesafiobackend.carteira.entity.Cartao;
 import picpaydesafiobackend.carteira.entity.Carteira;
+import picpaydesafiobackend.carteira.entity.Transacao;
 import picpaydesafiobackend.carteira.payload.request.CartaoRequest;
-import picpaydesafiobackend.common.entity.*;
-import picpaydesafiobackend.common.payload.request.*;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import picpaydesafiobackend.common.entity.Contato;
+import picpaydesafiobackend.common.entity.Endereco;
+import picpaydesafiobackend.common.entity.Pessoa;
+import picpaydesafiobackend.common.entity.SocialLink;
+import picpaydesafiobackend.common.payload.request.ContactNumberRequest;
+import picpaydesafiobackend.common.payload.request.ContatoRequest;
+import picpaydesafiobackend.common.payload.request.EnderecoRequest;
+import picpaydesafiobackend.common.payload.request.SocialMediaLinkRequest;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -18,6 +25,14 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class CustomBuilders {
+
+    public Transacao buildTransacao(String pagador, String recebedor, Double valor) {
+        return Transacao.builder()
+                .pagador(pagador)
+                .recebedor(recebedor)
+                .valor(valor)
+                .build();
+    }
 
     public Cartao buildCartao(CartaoRequest cartao, Carteira carteira) {
         return Cartao.builder()
